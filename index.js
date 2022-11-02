@@ -1,3 +1,4 @@
+import PASSWORD from "./password";
 const auth = require('./src/auth');
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -5,7 +6,7 @@ const cookieParser = require('cookie-parser');
 const mongoose  = require('mongoose');
 const userSchema = require('./src/userSchema');
 const User = mongoose.model('user', userSchema);
-const connectionString;
+const connectionString = PASSWORD;
 // 'mongodb://localhost:27017/webdev';
 
 let articles = [{ id: 0, author: 'Mack', body: 'Post 1' },
