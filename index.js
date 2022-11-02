@@ -53,7 +53,7 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 app.get('/', hello);
 app.post('/users/:uname', addUser);
-// auth(app);
+auth(app);
 app.get('/articles', getArticles);
 app.get('/articles/:id', getArticle);
 app.post('/article', addArticle);
