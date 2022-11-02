@@ -5,7 +5,7 @@ const cookieParser = require('cookie-parser');
 const mongoose  = require('mongoose');
 const userSchema = require('./src/userSchema');
 const User = mongoose.model('user', userSchema);
-const connectionString = 'mongodb+srv://chenlize96:xxx123@users.4mgrl6n.mongodb.net/?retryWrites=true&w=majority';
+const connectionString;
 // 'mongodb://localhost:27017/webdev';
 
 let articles = [{ id: 0, author: 'Mack', body: 'Post 1' },
