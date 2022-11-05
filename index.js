@@ -1,3 +1,8 @@
+const cors = require("cors");
+const corsOptions = {
+  origin: "http://localhost:4200",
+  credentials: true,
+};
 const doc = require("./password");
 const auth = require("./src/auth");
 const express = require("express");
@@ -45,7 +50,7 @@ const getArticle = (req, res) => res.send(articles[req.params.id]);
 
 const addArticle = (req, res) => {
   let post = req.body;
-  console.log(post);
+  // console.log(post);
   let article = { id: articles.length, author: post.author, body: post.body };
   articles.push(article);
   res.send(articles);
@@ -54,6 +59,8 @@ const addArticle = (req, res) => {
 const app = express();
 app.use(bodyParser.json());
 app.use(cookieParser());
+app.use(cors(corsOptions));
+
 app.get("/", hello);
 app.post("/users/:uname", addUser);
 auth(app);
