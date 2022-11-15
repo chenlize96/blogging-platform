@@ -3,15 +3,12 @@ const corsOptions = {
   origin: "http://localhost:4200",
   credentials: true,
 };
-const doc = require("./password");
 const auth = require("./src/auth");
 const express = require("express");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
-const mongoose = require("mongoose");
-const userSchema = require("./src/userSchema");
-const User = mongoose.model("user", userSchema);
-const connectionString = doc.PASSWORD;
+
+// const upCloud = require('./src/uploadCloudinary.js');
 
 let articles = [
   { id: 0, author: "Mack", body: "Post 1" },
@@ -60,6 +57,7 @@ const app = express();
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(cors(corsOptions));
+// upCloud.setup(app);
 
 app.get("/", hello);
 app.post("/users/:uname", addUser);
