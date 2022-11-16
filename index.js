@@ -5,6 +5,9 @@ const corsOptions = {
 };
 const auth = require("./src/auth");
 const articles = require("./src/articles");
+const profile = require("./src/profile");
+const following = require("./src/following");
+
 const express = require("express");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
@@ -64,6 +67,8 @@ app.get("/", hello);
 // app.post("/users/:uname", addUser);
 auth(app);
 articles(app);
+profile(app);
+following(app);
 // app.get("/articles", getArticles);
 // app.get("/articles/:id", getArticle);
 // app.post("/article", addArticle);

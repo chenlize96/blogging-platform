@@ -108,9 +108,20 @@ async function createProfile(username, email, zipcode, dob) {
   }).save();
 }
 
+function updatePassword(req, res) {
+  let username = req.username;
+  let newPassword = req.body.password;
+  if (!newPassword) {
+    return res.sendStatus(400);
+  }
+  let msg = { username: username, result: "success" };
+  res.send(msg);
+}
+
 module.exports = (app) => {
   app.post("/login", login);
   app.post("/register", register);
   app.use(isLoggedIn);
   app.put("/logout", logout);
+  app.put("/password", updatePassword);
 };
