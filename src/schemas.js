@@ -51,5 +51,27 @@ const profileSchema = new mongoose.Schema({
   },
 });
 
+const articleSchema = new mongoose.Schema({
+  author: {
+    type: String,
+    required: [true, "Author is required"],
+  },
+  text: {
+    type: String,
+    required: [true, "Text is required"],
+  },
+  pid: {
+    type: Number,
+    required: [true, "Pid is required"],
+  },
+  date: {
+    type: Date,
+  },
+  comments: {
+    type: Array,
+  },
+});
+
 module.exports.User = mongoose.model("user", userSchema);
 module.exports.Profile = mongoose.model("profile", profileSchema);
+module.exports.Article = mongoose.model("article", articleSchema);

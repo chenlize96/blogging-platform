@@ -4,17 +4,18 @@ const corsOptions = {
   credentials: true,
 };
 const auth = require("./src/auth");
+const articles = require("./src/articles");
 const express = require("express");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 
 // const upCloud = require('./src/uploadCloudinary.js');
 
-let articles = [
-  { id: 0, author: "Mack", body: "Post 1" },
-  { id: 1, author: "Jack", body: "Post 2" },
-  { id: 2, author: "Zack", body: "Post 3" },
-];
+// let articles = [
+//   { id: 0, author: "Mack", body: "Post 1" },
+//   { id: 1, author: "Jack", body: "Post 2" },
+//   { id: 2, author: "Zack", body: "Post 3" },
+// ];
 
 const hello = (req, res) => res.send({ hello: "world" });
 
@@ -60,11 +61,12 @@ app.use(cors(corsOptions));
 // upCloud.setup(app);
 
 app.get("/", hello);
-app.post("/users/:uname", addUser);
+// app.post("/users/:uname", addUser);
 auth(app);
-app.get("/articles", getArticles);
-app.get("/articles/:id", getArticle);
-app.post("/article", addArticle);
+articles(app);
+// app.get("/articles", getArticles);
+// app.get("/articles/:id", getArticle);
+// app.post("/article", addArticle);
 
 // Get the port from the environment, i.e., Heroku sets it
 const port = process.env.PORT || 3000;

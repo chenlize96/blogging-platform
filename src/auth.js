@@ -4,23 +4,17 @@ let sessionUser = {};
 let cookieKey = "sid";
 const md5 = require("md5");
 
-let userObjs = {};
-
 function isLoggedIn(req, res, next) {
   // likely didn't install cookie parser
   if (!req.cookies) {
     return res.sendStatus(401);
   }
-
   let sid = req.cookies[cookieKey];
-
   // no sid for cookie key
   if (!sid) {
     return res.sendStatus(401);
   }
-
   let username = sessionUser[sid];
-
   // no username mapped to sid
   if (username) {
     req.username = username;
@@ -33,35 +27,30 @@ function isLoggedIn(req, res, next) {
 function login(req, res) {
   let username = req.body.username;
   let password = req.body.password;
-
   // supply username and password
   if (!username || !password) {
     return res.sendStatus(400);
   }
-
-  let user = userObjs[username];
-
-  if (!user) {
-    return res.sendStatus(401);
-  }
-
-  // TODO: create hash using md5, user salt and request password, check if hash matches user hash
-  let hash = md5(password + user.salt);
-
-  if (hash === user.hash) {
-    // TODO: create session id, use sessionUser to map sid to user username
-    // let sid = 0 // CHANGE THIS!
-
-    let sid = req.cookies[cookieKey];
-    sessionUser[sid] = username;
-
-    // Adding cookie for session id
-    res.cookie(cookieKey, sid, { maxAge: 3600 * 1000, httpOnly: true });
-    let msg = { username: username, result: "success" };
-    res.send(msg);
-  } else {
-    res.sendStatus(401);
-  }
+  User.find({ username: username }, function (err, data) {
+    if (err) {
+      return res.status(500).send({ result: "Server Error" });
+    }
+    if (data.length === 0) {
+      return res.sendStatus(401);
+    }
+    let cur = data[0];
+    let hash = md5(password + cur.salt);
+    if (hash === cur.hash) {
+      let sid = req.cookies[cookieKey];
+      sessionUser[sid] = username;
+      // Adding cookie for session id
+      res.cookie(cookieKey, sid, { maxAge: 3600 * 1000, httpOnly: true });
+      let msg = { username: username, result: "success" };
+      res.send(msg);
+    } else {
+      res.sendStatus(401);
+    }
+  });
 }
 
 function register(req, res) {
@@ -73,7 +62,7 @@ function register(req, res) {
   let zipcode = req.body.zipcode;
   let password = req.body.password;
   // supply username and password
-  if (!username || !password) {
+  if (!username || !email || !dob || !zipcode || !password) {
     return res.sendStatus(400);
   }
   User.find({ username: username }, function (err, data) {
@@ -90,6 +79,13 @@ function register(req, res) {
     let msg = { result: "success", username: username };
     res.send(msg);
   });
+}
+
+function logout(req, res) {
+  let sid = req.cookies[cookieKey];
+  delete sessionUser[sid];
+  // res.clearCookie(cookieKey);
+  res.send("OK");
 }
 
 async function createUser(username, salt, hash) {
@@ -116,4 +112,5 @@ module.exports = (app) => {
   app.post("/login", login);
   app.post("/register", register);
   app.use(isLoggedIn);
+  app.put("/logout", logout);
 };
