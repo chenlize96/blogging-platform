@@ -7,3 +7,10 @@
 
 
 slip day: 1
+
+"Andy" is in the database, while "testUser" is only used in tests.
+
+{
+    "username": "Andy",
+    "password": 123
+}
