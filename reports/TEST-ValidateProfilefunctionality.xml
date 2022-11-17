@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites>
+<testsuite name="Validate Profile functionality" errors="0" tests="4" failures="0" time="0.322" timestamp="2022-11-16T19:39:10">
+  <testcase classname="Validate Profile functionality" name="register new user" time="0.087"></testcase>
+  <testcase classname="Validate Profile functionality" name="login user" time="0.072"></testcase>
+  <testcase classname="Validate Profile functionality" name="should give me the current headline" time="0.058"></testcase>
+  <testcase classname="Validate Profile functionality" name="should update the headline for the logged in user" time="0.089"></testcase>
+</testsuite>
+</testsuites>

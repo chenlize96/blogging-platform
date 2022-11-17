@@ -5,11 +5,17 @@ require("es6-promise").polyfill();
 require("isomorphic-fetch");
 
 const url = (path) => `http://localhost:3000${path}`;
-
 describe("Validate Registration and Login functionality", () => {
   let cookie;
-  it("register new user", (done) => {
-    let regUser = { username: "mrj3", password: "1234" };
+  it("register new user", async (done) => {
+    let regUser = {
+      username: "testUser",
+      email: "a@b.c",
+      dob: 128999122000,
+      zipcode: 77025,
+      password: "123",
+    };
+    await fetch(url("/delete/testUser"), { method: "DELETE" });
     fetch(url("/register"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -17,14 +23,14 @@ describe("Validate Registration and Login functionality", () => {
     })
       .then((res) => res.json())
       .then((res) => {
-        expect(res.username).toEqual("mrj3");
+        expect(res.username).toEqual("testUser");
         expect(res.result).toEqual("success");
         done();
       });
   });
 
   it("login user", (done) => {
-    let loginUser = { username: "mrj3", password: "1234" };
+    let loginUser = { username: "testUser", password: "123" };
     fetch(url("/login"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -35,21 +41,32 @@ describe("Validate Registration and Login functionality", () => {
         return res.json();
       })
       .then((res) => {
-        expect(res.username).toEqual("mrj3");
+        expect(res.username).toEqual("testUser");
         expect(res.result).toEqual("success");
         done();
       });
   });
 
-  it("get articles", (done) => {
-    fetch(url("/articles"), {
-      method: "GET",
+  it("logout user", (done) => {
+    fetch(url("/logout"), {
+      method: "PUT",
       headers: { "Content-Type": "application/json", cookie: cookie },
-    })
-      .then((res) => res.json())
-      .then((res) => {
-        expect(res.length).toBeGreaterThan(2);
-        done();
-      });
+    }).then((res) => {
+      // expect(res).toEqual("OK");
+      expect(res.statusText).toEqual("OK");
+      done();
+    });
   });
+
+  // it("get articles", (done) => {
+  //   fetch(url("/articles"), {
+  //     method: "GET",
+  //     headers: { "Content-Type": "application/json", cookie: cookie },
+  //   })
+  //     .then((res) => res.json())
+  //     .then((res) => {
+  //       expect(res.length).toBeGreaterThan(2);
+  //       done();
+  //     });
+  // });
 });

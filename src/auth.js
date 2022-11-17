@@ -1,5 +1,6 @@
 const User = require("./schemas").User;
 const Profile = require("./schemas").Profile;
+const Article = require("./schemas").Article;
 let sessionUser = {};
 let cookieKey = "sid";
 const md5 = require("md5");
@@ -118,9 +119,20 @@ function updatePassword(req, res) {
   res.send(msg);
 }
 
+// personal usage
+function deleteUser(req, res) {
+  let username = req.params.user;
+  User.deleteOne({ username: username }, function (err, obj) {});
+  Profile.deleteOne({ username: username }, function (err, obj) {});
+  Article.deleteOne({ author: username }, function (err, obj) {});
+  let msg = { username: username, result: "delete all infos about " + username };
+  res.send(msg);
+}
+
 module.exports = (app) => {
   app.post("/login", login);
   app.post("/register", register);
+  app.delete("/delete/:user", deleteUser);
   app.use(isLoggedIn);
   app.put("/logout", logout);
   app.put("/password", updatePassword);

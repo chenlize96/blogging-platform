@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites>
+<testsuite name="Validate Article functionality" errors="0" tests="5" failures="0" time="0.781" timestamp="2022-11-16T19:39:09">
+  <testcase classname="Validate Article functionality" name="register new user" time="0.119"></testcase>
+  <testcase classname="Validate Article functionality" name="login user" time="0.073"></testcase>
+  <testcase classname="Validate Article functionality" name="should give me no article" time="0.089"></testcase>
+  <testcase classname="Validate Article functionality" name="should add new article, return list of articles with new article" time="0.435"></testcase>
+  <testcase classname="Validate Article functionality" name="should return all articles authored by testUser" time="0.061"></testcase>
+</testsuite>
+</testsuites>

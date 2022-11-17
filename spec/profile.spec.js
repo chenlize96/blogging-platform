@@ -6,9 +6,8 @@ require("isomorphic-fetch");
 
 const url = (path) => `http://localhost:3000${path}`;
 
-describe("Validate Article functionality", () => {
+describe("Validate Profile functionality", () => {
   let cookie;
-  let numOfArticles = -1;
   it("register new user", async (done) => {
     let regUser = {
       username: "testUser",
@@ -49,56 +48,31 @@ describe("Validate Article functionality", () => {
       });
   });
 
-  it("should give me no article", (done) => {
-    fetch(url("/articles"), {
+  it("should give me the current headline", (done) => {
+    fetch(url("/headline"), {
       method: "GET",
       headers: { "Content-Type": "application/json", cookie: cookie },
     })
       .then((res) => res.json())
       .then((res) => {
-        if (res.articles instanceof Array) {
-          expect(res.articles.length).toEqual(0);
-          numOfArticles = res.articles.length;
-        }
+        expect(res.headline).toEqual("Input your status");
+        expect(res.username).toEqual("testUser");
         done();
       });
   });
 
-  it("should add new article, return list of articles with new article", (done) => {
-    // add a new article
-    let post = { text: "new post" };
-    fetch(url("/article"), {
-      method: "POST",
+  it("should update the headline for the logged in user", (done) => {
+    // update the headline
+    let query = { headline: "Happy" };
+    fetch(url("/headline"), {
+      method: "PUT",
       headers: { "Content-Type": "application/json", cookie: cookie },
-      body: JSON.stringify(post),
+      body: JSON.stringify(query),
     })
       .then((res) => res.json())
       .then((res) => {
-        let cur = res.articles;
-        if (cur instanceof Array) {
-          expect(cur.length).toEqual(numOfArticles + 1);
-          var last = cur[cur.length - 1];
-          expect(last.text).toEqual("new post");
-          expect(last.author).toEqual("testUser");
-        }
-        done();
-      });
-  });
-
-  it("should return all articles authored by testUser", (done) => {
-    // validate that the correct article is returned
-    fetch(url("/articles/testUser"), {
-      method: "GET",
-      headers: { "Content-Type": "application/json", cookie: cookie },
-    })
-      .then((res) => res.json())
-      .then((res) => {
-        let cur = res.articles;
-        if (cur instanceof Array) {
-          var last = cur[cur.length - 1];
-          expect(last.author).toEqual("testUser");
-          expect(last.text).toEqual("new post");
-        }
+        expect(res.username).toEqual("testUser");
+        expect(res.headline).toEqual("Happy");
         done();
       });
   });
