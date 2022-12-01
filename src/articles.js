@@ -60,25 +60,32 @@ function updateArticle(req, res) {
   if (!text || !target) {
     return res.sendStatus(400);
   }
-  if (!commentId) {
+  // console.log(commentId);
+  if (commentId === undefined) {
     // update text
-    Article.findOne({ pid: target }).exec(function (err, data) {
-      if (err) {
-        return res.status(500).send({ result: "Server Error" });
+    Article.findOneAndUpdate(
+      { pid: target, author: username },
+      { text: text },
+      { new: true },
+      function (err, data) {
+        if (err) {
+          return res.status(500).send({ result: "Server Error" });
+        }
+        if (!data) {
+          return res.status(400).send({ result: "Unauthorized to update" });
+        }
+        // if (data.author !== username) {
+        //   return res
+        //     .status(400)
+        //     .send({ result: "The user does not own the article" });
+        // }
+        // data.text = text;
+        return res.status(200).send({ articles: data });
       }
-      if (!data) {
-        return res.status(400).send({ result: "Post ID does not exist" });
-      }
-      if (data.author !== username) {
-        return res
-          .status(400)
-          .send({ result: "The user does not own the article" });
-      }
-      data.text = text;
-      return res.status(200).send({ articles: data });
-    });
+    );
   } else {
     // update comment
+    let idx = Number(commentId);
     Article.findOne({ pid: target }).exec(function (err, data) {
       if (err) {
         return res.status(500).send({ result: "Server Error" });
@@ -86,8 +93,34 @@ function updateArticle(req, res) {
       if (!data) {
         return res.status(400).send({ result: "Post ID does not exist" });
       }
-      // update comment
-      return res.status(200).send({ articles: data });
+      let comments = data.comments;
+      let curLen = comments.length;
+      let timestamp = new Date();
+      if (idx === -1) {
+        comments.push({
+          text: text,
+          timestamp: timestamp,
+          author: username,
+          id: curLen,
+        });
+      } else {
+        comment = comments.filter((comment) => comment.id == idx);
+        if (comment.length === 0) {
+          return res.status(400).send({ result: "Array Index Out Of Bounds" });
+        }
+        comment[0]["text"] = text;
+      }
+      Article.findOneAndUpdate(
+        { pid: target },
+        { comments: comments },
+        { new: true },
+        function (err, data) {
+          if (err) {
+            return res.status(500).send({ result: "Server Error" });
+          }
+          return res.status(200).send({ articles: data });
+        }
+      );
     });
   }
 }
