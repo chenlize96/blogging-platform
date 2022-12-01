@@ -15,7 +15,7 @@ function getUsers(req, res) {
     }
     return res
       .status(200)
-      .send({ username: data.username, following: data.followedUsers });
+      .send({ username: data.username, following: data.following });
   });
 }
 
@@ -32,13 +32,24 @@ function addUser(req, res) {
     // if (!data) {
     //   return res.status(400).send({ result: "User does not exist" });
     // }
-    // if (data.followedUsers.includes(newUser)) {
+    // if (data.following.includes(newUser)) {
     //   return res.status(400).send({ result: "User already exists" });
     // }
-    data.followedUsers.push(newUser);
-    return res
-      .status(200)
-      .send({ username: data.username, following: data.followedUsers });
+    let newFollowing = data.following;
+    newFollowing.push(newUser);
+    Profile.findOneAndUpdate(
+      { username: username },
+      { following: newFollowing },
+      { new: true },
+      function (err, data) {
+        if (err) {
+          return res.status(500).send({ result: "Server Error" });
+        }
+        return res
+          .status(200)
+          .send({ username: data.username, following: data.following });
+      }
+    );
   });
 }
 
@@ -52,13 +63,23 @@ function removeUser(req, res) {
     if (err) {
       return res.status(500).send({ result: "Server Error" });
     }
-    // if (!data.followedUsers.includes(newUser)) {
+    // if (!data.following.includes(newUser)) {
     //   return res.status(400).send({ result: "User does not exists" });
     // }
-    let newFollowing = data.followedUsers.filter((user) => user !== newUser);
-    return res
-      .status(200)
-      .send({ username: data.username, following: newFollowing });
+    let newFollowing = data.following.filter((user) => user !== newUser);
+    Profile.findOneAndUpdate(
+      { username: username },
+      { following: newFollowing },
+      { new: true },
+      function (err, data) {
+        if (err) {
+          return res.status(500).send({ result: "Server Error" });
+        }
+        return res
+          .status(200)
+          .send({ username: data.username, following: data.following });
+      }
+    );
   });
 }
 

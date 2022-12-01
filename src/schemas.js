@@ -43,7 +43,7 @@ const profileSchema = new mongoose.Schema({
     type: String,
     required: [true, "Headline is required"],
   },
-  followedUsers: {
+  following: {
     type: Array,
   },
   avatar: {

@@ -12,12 +12,6 @@ const profile = {
     "https://upload.wikimedia.org/wikipedia/en/thumb/4/4e/DWLeebron.jpg/220px-DWLeebron.jpg",
 };
 
-// const getHeadline = (req, res) => {
-// user = ...
-// // this return the requested user headline
-// res.send({ username: user[username], headline: user[headline] })
-// }
-
 function getHeadline(req, res) {
   let target = req.params.user; // endpoint
   let username = req.username; // current username
@@ -90,8 +84,19 @@ function updateEmail(req, res) {
   if (!newEmail) {
     return res.sendStatus(400);
   }
-  let msg = { username: username, email: newEmail };
-  res.send(msg);
+  Profile.findOneAndUpdate(
+    { username: username },
+    { email: newEmail },
+    { new: true },
+    function (err, data) {
+      if (err) {
+        return res.status(500).send({ result: "Server Error" });
+      }
+      return res
+        .status(200)
+        .send({ username: data.username, email: data.email });
+    }
+  );
 }
 
 function getZipcode(req, res) {
@@ -119,8 +124,19 @@ function updateZipcode(req, res) {
   if (!newZipcode) {
     return res.sendStatus(400);
   }
-  let msg = { username: username, zipcode: newZipcode };
-  res.send(msg);
+  Profile.findOneAndUpdate(
+    { username: username },
+    { zipcode: newZipcode },
+    { new: true },
+    function (err, data) {
+      if (err) {
+        return res.status(500).send({ result: "Server Error" });
+      }
+      return res
+        .status(200)
+        .send({ username: data.username, zipcode: data.zipcode });
+    }
+  );
 }
 
 function getAvatar(req, res) {
@@ -148,8 +164,19 @@ function updateAvatar(req, res) {
   if (!newAvatar) {
     return res.sendStatus(400);
   }
-  let msg = { username: username, avatar: newAvatar };
-  res.send(msg);
+  Profile.findOneAndUpdate(
+    { username: username },
+    { avatar: newAvatar },
+    { new: true },
+    function (err, data) {
+      if (err) {
+        return res.status(500).send({ result: "Server Error" });
+      }
+      return res
+        .status(200)
+        .send({ username: data.username, avatar: data.avatar });
+    }
+  );
 }
 
 function getDob(req, res) {

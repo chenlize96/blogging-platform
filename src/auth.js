@@ -104,7 +104,7 @@ async function createProfile(username, email, zipcode, dob) {
     zipcode: zipcode,
     dob: dob,
     headline: "Input your status",
-    followedUsers: [],
+    following: [],
     avatar: "",
   }).save();
 }
@@ -112,11 +112,25 @@ async function createProfile(username, email, zipcode, dob) {
 function updatePassword(req, res) {
   let username = req.username;
   let newPassword = req.body.password;
+  // console.log(newPassword);
   if (!newPassword) {
     return res.sendStatus(400);
   }
-  let msg = { username: username, result: "success" };
-  res.send(msg);
+  // update salt and hash
+  let salt = username + new Date().getTime();
+  let hash = md5(newPassword + salt);
+  User.findOneAndUpdate(
+    { username: username },
+    { salt: salt, hash: hash },
+    { new: true },
+    function (err, data) {
+      if (err) {
+        return res.status(500).send({ result: "Server Error" });
+      }
+      let msg = { username: data.username, result: "success" };
+      res.send(msg);
+    }
+  );
 }
 
 // personal usage
@@ -125,7 +139,10 @@ function deleteUser(req, res) {
   User.deleteOne({ username: username }, function (err, obj) {});
   Profile.deleteOne({ username: username }, function (err, obj) {});
   Article.deleteOne({ author: username }, function (err, obj) {});
-  let msg = { username: username, result: "delete all infos about " + username };
+  let msg = {
+    username: username,
+    result: "delete all infos about " + username,
+  };
   res.send(msg);
 }
 
