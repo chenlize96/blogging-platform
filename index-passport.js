@@ -32,9 +32,10 @@ passport.deserializeUser(function(user, done) {
 });
 
 passport.use(new GoogleStrategy({
-    clientID: '885674831616-ggpsutl1448tm6gr6hz66rmlvhjp64ss.apps.googleusercontent.com',
-    clientSecret: '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',
-    callbackURL: "https://localhost:3000" + "/auth/google/callback",    
+    clientID: '63737027022-dt4agb19p003u825b5go9cg3ojfj979f.apps.googleusercontent.com',
+    clientSecret: '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',
+    callbackURL: "/auth/google/callback",
+    // scope: ['profile', 'email'],
 },
     function(accessToken, refreshToken, profile, done) {
         let user = {
