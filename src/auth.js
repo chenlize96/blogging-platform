@@ -47,9 +47,9 @@ function login(req, res) {
       // Adding cookie for session id
       res.cookie(cookieKey, sid, { maxAge: 3600 * 1000, httpOnly: true });
       let msg = { username: username, result: "success" };
-      res.send(msg);
+      return res.status(200).send(msg);
     } else {
-      res.sendStatus(401);
+      return res.sendStatus(401);
     }
   });
 }
@@ -71,7 +71,7 @@ function register(req, res) {
       return res.status(500).send({ result: "Server Error" });
     }
     if (data.length > 0) {
-      return res.status(200).send({ result: "Username already exists" });
+      return res.status(400).send({ result: "Username already exists" });
     }
     let salt = username + new Date().getTime();
     let hash = md5(password + salt);
