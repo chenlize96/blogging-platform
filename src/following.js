@@ -25,31 +25,40 @@ function addUser(req, res) {
   if (username === newUser) {
     return res.status(400).send({ result: "Cannot add yourself" });
   }
-  Profile.findOne({ username: username }).exec(function (err, data) {
+  Profile.findOne({ username: newUser }).exec(function (err, data) {
     if (err) {
       return res.status(500).send({ result: "Server Error" });
     }
-    // if (!data) {
-    //   return res.status(400).send({ result: "User does not exist" });
-    // }
-    // if (data.following.includes(newUser)) {
-    //   return res.status(400).send({ result: "User already exists" });
-    // }
-    let newFollowing = data.following;
-    newFollowing.push(newUser);
-    Profile.findOneAndUpdate(
-      { username: username },
-      { following: newFollowing },
-      { new: true },
-      function (err, data) {
+    if (!data) {
+      return res.status(400).send({ result: "User does not exist" });
+    } else {
+      Profile.findOne({ username: username }).exec(function (err, data) {
         if (err) {
           return res.status(500).send({ result: "Server Error" });
         }
-        return res
-          .status(200)
-          .send({ username: data.username, following: data.following });
-      }
-    );
+        // if (!data) {
+        //   return res.status(400).send({ result: "User does not exist" });
+        // }
+        // if (data.following.includes(newUser)) {
+        //   return res.status(400).send({ result: "User already exists" });
+        // }
+        let newFollowing = data.following;
+        newFollowing.push(newUser);
+        Profile.findOneAndUpdate(
+          { username: username },
+          { following: newFollowing },
+          { new: true },
+          function (err, data) {
+            if (err) {
+              return res.status(500).send({ result: "Server Error" });
+            }
+            return res
+              .status(200)
+              .send({ username: data.username, following: data.following });
+          }
+        );
+      });
+    }
   });
 }
 
