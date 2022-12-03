@@ -92,8 +92,23 @@ function removeUser(req, res) {
   });
 }
 
+function getFollowingInfo(req, res) {
+  let username = req.username; // current username
+  Profile.findOne({ username: username }).exec(async function (err, data) {
+    if (err) {
+      return res.status(500).send({ result: "Server Error" });
+    }
+    let following = data.following;
+    let msg = await Promise.all(
+      following.map(async (user) => await Profile.findOne({ username: user }))
+    );
+    return res.status(200).send({ followingInfo: msg });
+  });
+}
+
 module.exports = (app) => {
   app.get("/following/:user?", getUsers);
+  app.get("/followingCombo", getFollowingInfo);
   app.put("/following/:user", addUser);
   app.delete("/following/:user", removeUser);
 };
