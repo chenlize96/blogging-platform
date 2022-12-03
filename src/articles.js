@@ -1,4 +1,5 @@
 const Article = require("./schemas").Article;
+const Profile = require("./schemas").Profile;
 
 function getArticles(req, res) {
   let target = req.params.id; // endpoint
@@ -21,11 +22,21 @@ function getArticles(req, res) {
     });
   } else {
     // there is no :id
-    Article.find({ author: username }).exec(function (err, data) {
+    // Article.find({ author: username }).exec(function (err, data) {
+    //   if (err) {
+    //     return res.status(500).send({ result: "Server Error" });
+    //   }
+    //   return res.status(200).send({ articles: data });
+    // });
+    Profile.findOne({ username: username }).exec(async function (err, data) {
       if (err) {
         return res.status(500).send({ result: "Server Error" });
       }
-      return res.status(200).send({ articles: data });
+      let names = [username].concat(data.following);
+      let msg = await Promise.all(
+        names.map(async (user) => await Article.find({ author: user }))
+      );
+      return res.status(200).send({ articles: msg.flat() });
     });
   }
 }
