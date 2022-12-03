@@ -45,6 +45,8 @@ function getArticles(req, res) {
 async function addArticle(req, res) {
   let username = req.username; // current username
   let text = req.body.text;
+  // let image = req.body.postImg;
+  // console.log(image);
   // let image;
   // console.log(req.body);
   // if (req.body.fd) {
@@ -143,9 +145,43 @@ function updateArticle(req, res) {
   }
 }
 
+// function uploadPostImg(req, res) {
+//   let username = req.username;
+//   let curPostImg = req.fileurl;
+//   // console.log(curPostImg);
+//   return res.status(200).send({ username: username, postImg: curPostImg });
+// }
+
+async function addArticleWithImg(req, res) {
+  let username = req.username; // current username
+  let text = req.body.text;
+  let curPostImg = req.fileurl;
+  // console.log(curPostImg);
+  // console.log(text);
+  if (!text) {
+    return res.sendStatus(400);
+  }
+  let timestamp = new Date();
+  await new Article({
+    author: username,
+    text: text,
+    date: timestamp,
+    pid: timestamp.getTime(),
+    comments: [],
+    image: curPostImg,
+  }).save();
+  Article.find({ author: username }).exec(function (err, data) {
+    if (err) {
+      return res.status(500).send({ result: "Server Error" });
+    }
+    res.status(200).send({ articles: data });
+  });
+}
+
 module.exports = (app) => {
   app.get("/articles/:id?", getArticles);
   app.put("/articles/:id", updateArticle);
-  app.post("/article",  addArticle);
-  // app.post("/article", uploadImage("postImg"), addArticle);
+  app.post("/article", addArticle);
+  app.post("/articleWithImg", uploadImage("post"), addArticleWithImg);
+  // app.put("/postImg", uploadImage("postImg"), uploadPostImg);
 };
