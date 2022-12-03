@@ -45,7 +45,12 @@ function login(req, res) {
       let sid = req.cookies[cookieKey];
       sessionUser[sid] = username;
       // Adding cookie for session id
-      res.cookie(cookieKey, sid, { maxAge: 3600 * 1000, httpOnly: true });
+      res.cookie(cookieKey, sid, {
+        maxAge: 3600 * 1000,
+        httpOnly: true,
+        sameSite: "none",
+        secure: true,
+      });
       let msg = { username: username, result: "success" };
       return res.status(200).send(msg);
     } else {

@@ -1,6 +1,7 @@
 const cors = require("cors");
 const corsOptions = {
-  origin: "http://localhost:4200",
+  // origin: "http://localhost:4200",
+  origin: "https://final-frontend-lc97.surge.sh",
   credentials: true,
 };
 const auth = require("./src/auth");
