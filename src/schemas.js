@@ -70,6 +70,9 @@ const articleSchema = new mongoose.Schema({
   comments: {
     type: Array,
   },
+  image: {
+    type: String,
+  },
 });
 
 module.exports.User = mongoose.model("user", userSchema);

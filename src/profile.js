@@ -1,6 +1,7 @@
 // this is profile.js which contains all user profile
 // information except passwords which is in auth.js
 const Profile = require("./schemas").Profile;
+const uploadImage = require("./uploadCloudinary");
 
 const profile = {
   username: "DLeebron",
@@ -160,7 +161,9 @@ function getAvatar(req, res) {
 
 function updateAvatar(req, res) {
   let username = req.username;
-  let newAvatar = req.body.avatar;
+  let newAvatar = req.fileurl;
+  // console.log(newAvatar);
+  // let newAvatar = req.body.avatar;
   if (!newAvatar) {
     return res.sendStatus(400);
   }
@@ -204,6 +207,7 @@ module.exports = (app) => {
   app.get("/zipcode/:user?", getZipcode);
   app.put("/zipcode", updateZipcode);
   app.get("/avatar/:user?", getAvatar);
-  app.put("/avatar", updateAvatar);
+  app.put("/avatar", uploadImage("avatar"), updateAvatar);
+  // app.put("/avatar", updateAvatar);
   app.get("/dob/:user?", getDob);
 };

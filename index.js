@@ -12,7 +12,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 
-const upCloud = require('./src/uploadCloudinary.js');
+// const upCloud = require('./src/uploadCloudinary.js');
 
 const hello = (req, res) => res.send({ hello: "world" });
 
@@ -20,7 +20,7 @@ const app = express();
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(cors(corsOptions));
-upCloud.setup(app);
+// upCloud.setup(app);
 
 app.get("/", hello);
 

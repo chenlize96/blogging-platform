@@ -1,5 +1,6 @@
 const Article = require("./schemas").Article;
 const Profile = require("./schemas").Profile;
+const uploadImage = require("./uploadCloudinary");
 
 function getArticles(req, res) {
   let target = req.params.id; // endpoint
@@ -44,6 +45,11 @@ function getArticles(req, res) {
 async function addArticle(req, res) {
   let username = req.username; // current username
   let text = req.body.text;
+  // let image;
+  // console.log(req.body);
+  // if (req.body.fd) {
+  //   image = req.body.fd.fileurl;
+  // }
   if (!text) {
     return res.sendStatus(400);
   }
@@ -54,6 +60,7 @@ async function addArticle(req, res) {
     date: timestamp,
     pid: timestamp.getTime(),
     comments: [],
+    image: "",
   }).save();
   Article.find({ author: username }).exec(function (err, data) {
     if (err) {
@@ -139,5 +146,6 @@ function updateArticle(req, res) {
 module.exports = (app) => {
   app.get("/articles/:id?", getArticles);
   app.put("/articles/:id", updateArticle);
-  app.post("/article", addArticle);
+  app.post("/article",  addArticle);
+  // app.post("/article", uploadImage("postImg"), addArticle);
 };

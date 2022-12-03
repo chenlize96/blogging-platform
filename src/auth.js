@@ -105,7 +105,7 @@ async function createProfile(username, email, zipcode, dob) {
     dob: dob,
     headline: "Input your status",
     following: [],
-    avatar: "",
+    avatar: "https://i.postimg.cc/fW7KK5F0/1.png", // default
   }).save();
 }
 
