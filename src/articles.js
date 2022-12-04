@@ -178,8 +178,24 @@ async function addArticleWithImg(req, res) {
   });
 }
 
+function sortedArticles(req, res) {
+  // xxx.find().skip(skip).limit(limit);
+  Profile.find({ username: req.username }).exec(function (err, items) {
+    const userObj = items[0];
+    // console.log(userObj);
+    const userToQuery = [req.username, ...userObj.following];
+    // console.log(userToQuery);
+    Article.find({ author: { $in: userToQuery } })
+      .sort("-date")
+      .exec(function (err, data) {
+        return res.status(200).send({ articles: data });
+      });
+  });
+}
+
 module.exports = (app) => {
   app.get("/articles/:id?", getArticles);
+  app.get("/sorted/:id?", sortedArticles);
   app.put("/articles/:id", updateArticle);
   app.post("/article", addArticle);
   app.post("/articleWithImg", uploadImage("post"), addArticleWithImg);
