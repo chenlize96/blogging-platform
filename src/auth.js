@@ -48,7 +48,7 @@ function login(req, res) {
       res.cookie(cookieKey, sid, {
         maxAge: 3600 * 1000,
         httpOnly: true,
-        SameSite: "None",
+        sameSite: "none",
         secure: true,
       });
       let msg = { username: username, result: "success" };
