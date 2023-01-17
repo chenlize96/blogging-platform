@@ -1,5 +1,4 @@
-
-"netid": "lc97",
+## Basic Information
 
 "frontend": "https://final-frontend-lc97.surge.sh",
 
