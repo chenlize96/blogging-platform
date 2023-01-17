@@ -1,0 +1,11 @@
+.myApp {
+  text-align: center;
+  background-image: url("https://i.postimg.cc/CxyQFVBH/background1.png");
+  height: 100vh;
+  /* viewport height - the height of the browser */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  overflow: auto;
+  /* overflow - remove the top blank line */
+}
